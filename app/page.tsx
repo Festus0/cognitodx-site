@@ -1,4 +1,12 @@
+"use client";
+
+import { useState } from "react";
+
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [interest, setInterest] = useState("Collaboration");
+  const [message, setMessage] = useState("");
+
   const features = [
     {
       title: "Longitudinal AI",
@@ -21,6 +29,21 @@ export default function Home() {
     "Cambridge-built",
   ];
 
+  const handleSend = () => {
+    const subject = `CognitoDx enquiry: ${interest}`;
+    const body = `Hello Festus,
+
+I am interested in: ${interest}
+
+Message:
+${message}
+`;
+
+    window.location.href = `mailto:fs628@cam.ac.uk?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <div className="min-h-screen text-slate-900 relative overflow-hidden bg-white">
       {/* Animated MRI-like background */}
@@ -41,6 +64,7 @@ export default function Home() {
 
         <div className="absolute inset-0 opacity-[0.10] [background-image:linear-gradient(to_right,rgba(148,163,184,0.25)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.25)_1px,transparent_1px)] [background-size:72px_72px]" />
       </div>
+
       <section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-sky-50/80 via-white to-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.14),transparent_28%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.12),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
@@ -61,7 +85,10 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <button className="rounded-2xl bg-slate-950 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5">
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className="rounded-2xl bg-slate-950 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5"
+                >
                   Explore collaboration
                 </button>
                 <button className="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
@@ -251,6 +278,78 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* MODAL */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-xl rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium uppercase tracking-[0.2em] text-sky-700">
+                  Connect
+                </p>
+                <h3 className="mt-2 text-2xl font-semibold text-slate-950">
+                  Explore collaboration
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Choose your interest area and send a message directly to CognitoDx.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsOpen(false)}
+                className="rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-500 transition hover:bg-slate-50"
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="mt-6">
+              <label className="mb-2 block text-sm font-medium text-slate-800">
+                I’m interested in
+              </label>
+              <select
+                value={interest}
+                onChange={(e) => setInterest(e.target.value)}
+                className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-400"
+              >
+                <option value="Investing">Investing</option>
+                <option value="Collaboration">Collaboration</option>
+                <option value="Networking">Networking</option>
+              </select>
+            </div>
+
+            <div className="mt-5">
+              <label className="mb-2 block text-sm font-medium text-slate-800">
+                Message
+              </label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Write your message here..."
+                rows={6}
+                className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-400"
+              />
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 sm:flex-1"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSend}
+                className="rounded-2xl bg-slate-950 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 sm:flex-1"
+              >
+                Send message
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
